@@ -1,9 +1,10 @@
+import { useIsLoggedIn } from 'common/auth'
 import { useState, type RefObject } from 'react'
-import { Button } from 'ui'
+import { buttonVariants, cn } from 'ui'
 import { MobileNavDrawer } from 'ui-patterns/MobileNav/MobileNavDrawer'
 import { MobileNavTabs } from 'ui-patterns/MobileNav/MobileNavTabs'
 
-import { SIGN_UP_URL, type NavMenu } from '../lib/nav'
+import { DASHBOARD_URL, SIGN_UP_URL, type NavMenu } from '../lib/nav'
 import { EXTERNAL_LINKS } from './HeaderMenu'
 
 export interface MobileMenuProps {
@@ -43,11 +44,7 @@ export const MobileMenu = ({
       open={open}
       toggleRef={toggleRef}
       className={className}
-      footer={
-        <Button variant="primary" block className="h-8 text-sm" asChild>
-          <a href={SIGN_UP_URL}>Sign up</a>
-        </Button>
-      }
+      footer={<MobileMenuAccountActions />}
     >
       <nav aria-label="Menu" className="flex flex-col gap-6">
         <MobileNavTabs
@@ -95,5 +92,33 @@ export const MobileMenu = ({
         </ul>
       </nav>
     </MobileNavDrawer>
+  )
+}
+
+const MobileMenuAccountActions = () => {
+  const isLoggedIn = useIsLoggedIn()
+
+  return isLoggedIn ? (
+    <a
+      href={DASHBOARD_URL}
+      className={cn(buttonVariants({ variant: 'default', block: true }), 'h-8 text-sm')}
+    >
+      Dashboard
+    </a>
+  ) : (
+    <div className="flex items-stretch gap-4">
+      <a
+        href="https://supabase.com/dashboard/sign-in"
+        className={cn(buttonVariants({ variant: 'default', block: true }), 'h-8 text-sm')}
+      >
+        Sign in
+      </a>
+      <a
+        href={SIGN_UP_URL}
+        className={cn(buttonVariants({ variant: 'primary', block: true }), 'h-8 text-sm')}
+      >
+        Start your project
+      </a>
+    </div>
   )
 }
