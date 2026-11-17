@@ -16,6 +16,7 @@ export interface NavMenu {
 }
 
 export const SIGN_UP_URL = 'https://supabase.com/dashboard/sign-up'
+export const DASHBOARD_URL = 'https://supabase.com/dashboard/projects'
 
 const toTopicLink = (topic: Topic): NavLink => ({
   label: topic,

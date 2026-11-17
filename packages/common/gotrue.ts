@@ -180,6 +180,15 @@ async function debuggableNavigatorLock<R>(
   }
 }
 
+// the localStorage getter throws when the browser blocks site storage
+const browserLocalStorage = (() => {
+  try {
+    return globalThis.localStorage
+  } catch {
+    return undefined
+  }
+})()
+
 export const gotrueClient = new AuthClient({
   url: process.env.NEXT_PUBLIC_GOTRUE_URL,
   storageKey: STORAGE_KEY,
@@ -188,8 +197,8 @@ export const gotrueClient = new AuthClient({
   lock: navigatorLockEnabled ? debuggableNavigatorLock : undefined,
   // TODO: Should this be enabled with a feature flag?
   experimental: { recoveryCodes: true },
-  ...('localStorage' in globalThis
-    ? { storage: globalThis.localStorage, userStorage: globalThis.localStorage }
+  ...(browserLocalStorage
+    ? { storage: browserLocalStorage, userStorage: browserLocalStorage }
     : null),
 })
 
